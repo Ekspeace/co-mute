@@ -1,0 +1,57 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Profile";
+}
+
+    <h2>My Profile</h2>
+
+    @if (ViewBag.Message != null)
+    {
+        <!-- Alert -->
+        <div class="alert alert-success modal-body-font" role="alert">
+            <strong>Successfully!</strong> @ViewBag.Message
+            <button type="button" class="close btn btn-sm float-end modal-body-font" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><strong>X</strong></span>
+            </button>
+        </div>
+    }
+<form method="post" asp-controller="User" asp-action="Profile">
+    <div class="form-group">
+        <label for="name">Name</label><span class="text-danger">*</span>
+        <input type="text" id="name" asp-for="@Model.Name" class="form-control" placeholder="First name" autofocus>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="surname">Surname</label><span class="text-danger">*</span>
+        <input type="text" id="surname" asp-for="@Model.Surname" class="form-control" placeholder="Surname">
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" asp-for="@Model.Phone" class="form-control" placeholder="Phone number">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label><span class="text-danger">*</span>
+        <input type="email" id="email" asp-for="@Model.Email" class="form-control" placeholder="Email address">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label><span class="text-danger">*</span>
+        <input type="password" id="password" asp-for="@Model.Password" class="form-control" placeholder="Password">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm password" required>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button class="btn btn-primary" type="submit" id="sign-in">Update</button>
+    </div>
+</form>

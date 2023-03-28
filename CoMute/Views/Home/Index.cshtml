@@ -1,0 +1,68 @@
+﻿@model UserCarPoolViewModel
+@{
+    ViewData["Title"] = "Opportunity Joined";
+}
+<h2 class="mb-5">Car-pool Opportunities Joined</h2>
+
+@if (Model.opportunities.Count() > 0)
+{
+    <table class="table table-bordered">
+        <tr>
+            <th>Departure Time </th>
+            <th>Expected Arrival Time</th>
+            <th>Origin</th>
+            <th>Days Available</th>
+            <th>Destination</th>
+            <th>Available Seats</th>
+            <th>Owner/Leader</th>
+            <th>Notes</th>
+            <th>Date Created</th>
+            <th>Date Joined</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var item in Model.opportunities)
+        {
+            <tr>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().DepartureTime.ToString("ddd, dd MMM yyyy  h:mm tt")
+                </td>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().ArrivalTime.ToString("ddd, dd MMM yyyy  h:mm tt")
+                </td>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().Origin
+                </td>
+                <td align="center">
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().DepartureTime.Subtract(DateTime.Now).Days
+                </td>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().Destination
+                </td>
+                <td align="center">
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().AvailableSeats
+                </td>
+                <td align="center">
+                    @Model.users.Where(u => u.Id == @Model.carPools.Where(c => c.Id == item.CarPoolId).First().Owner).First().Name
+                </td>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().Notes
+                </td>
+                <td>
+                    @Model.carPools.Where(c => c.Id == item.CarPoolId).First().DateCreated.ToString("dd MMM yyyy")
+                </td>
+                <td>
+                    @item.DateJoined.ToString("dd MMM yyyy")
+                </td>
+                <td align="center">
+                    @Html.ActionLink("Leave", "Leave","Home", new { id = item.Id }, new {@class = "btn btn-warning"})
+                </td>
+            </tr>
+        }
+
+    </table>
+}else{
+    <p class="fw-normal">No Car pool opportunity joined</p>
+    <div class="mt-3">
+        @Html.ActionLink("View Available", "Search","CarPool", new { } ,new {@class = "btn btn-primary"})
+    </div>
+}

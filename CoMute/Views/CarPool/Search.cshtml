@@ -1,0 +1,87 @@
+﻿@model UserCarPoolViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Search</h2>
+
+<div class="my-4">
+    <form method="get" class="form-inline" asp-controller="CarPool" asp-action="Index" >
+        <button type="submit" class="btn btn-primary">Create new</button>
+    </form>
+</div>
+
+<div class="my-4">
+    <form method="get" class="form-inline" asp-controller="CarPool" asp-action="Search">
+        <div class="d-flex">
+            Find by Origin or Destination:
+            <input type="text" id="inputPassword" name="SearchString" class="form-control mx-2 w-25">
+            <button type="submit" class="btn-sm btn-primary">Search</button>
+        </div>
+    </form>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>@Html.ActionLink("Departure Time", "Search", new { sortOrder = ViewBag.DepartureSortParm }) </th>
+        <th>@Html.ActionLink("Expected Arrival Time", "Search", new { sortOrder = ViewBag.ArrivalSortParm }) </th>
+        <th>@Html.ActionLink("Origin", "Search", new { sortOrder = ViewBag.OriginSortParm }) </th>
+        <th>Days Available</th>
+        <th>@Html.ActionLink("Destination", "Search", new { sortOrder = ViewBag.DestinationSortParm }) </th>
+        <th>Available Seats</th>
+        <th>Owner/Leader</th>
+        <th>Notes</th>
+        <th>@Html.ActionLink("Date Created", "Search", new { sortOrder = ViewBag.CreatedSortParm }) </th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var item in Model.carPools)
+    {
+        <tr>
+            <td>
+                @item.DepartureTime.ToString("ddd, dd MMM yyyy  h:mm tt")
+            </td>
+            <td>
+                @item.ArrivalTime.ToString("ddd, dd MMM yyyy h:mm tt")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Origin)
+            </td>
+            <td align="center">
+               @item.DepartureTime.Subtract(DateTime.Now).Days
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Destination)
+            </td>
+            <td align="center">
+                @Html.DisplayFor(modelItem => item.AvailableSeats)
+            </td>
+            <td align="center">
+                @Model.users.Where(u => u.Id == item.Owner).First().Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Notes)
+            </td>
+            <td>
+                @item.DateCreated.ToString("dd MMM yyyy")
+            </td>
+            <td align="center">
+                @{
+                    if (item.Owner == UserCarPoolViewModel.user.Id)
+                     {
+                            @Html.ActionLink("Edit", "Edit","CarPool", new { id=item.Id }, new {@class = "btn btn-primary me-2"})
+                            @Html.ActionLink("Delete", "Delete","CarPool", new { id = item.Id }, new {@class = "btn btn-danger"})
+                    }
+                    else if (Model.opportunities.Where(e => e.CarPoolId == item.Id && e.UserId == UserCarPoolViewModel.user.Id).Count() > 0)
+                    {
+                            @Html.ActionLink("Leave", "Leave","CarPool", new { id = item.Id }, new {@class = "btn btn-warning"})
+                    }else if(item.AvailableSeats > 0) {
+                            @Html.ActionLink("Join", "Join","CarPool", new { id = item.Id }, new {@class = "btn btn-success"})
+                    }else{
+                        <p class="text-info">No available seats left</p>
+                    }
+                }
+            </td>
+        </tr>
+        }
+
+</table>
